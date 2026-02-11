@@ -30,5 +30,14 @@ This PoC demonstrates the modernization of legacy API Gateway architectures into
 - **API Strategy:** **Kong Gateway**, Apigee Migration, Cloud-Agnostic Gateways.
 - **Reliability:** **Prometheus**, **k6 load testing**, High Availability (HA/DR).
 
+PoC is maintained as a reference architecture; all components are fully portable across AWS, GCP, and Azure
+## 📬 Contact / Hiring
+
+I am currently open to Principal Architect or Cloud-Native Platform Lead roles.
+
+- **Email:** druhindhavala@gmail.com
+- **LinkedIn:** www.linkedin.com/in/druhin-dhavala
+- **GitHub:** https://github.com/ddruhin/cloud-native-api-platform
+- 
 ---
 *Note: This is a sanitized architectural reference. All business logic and client-specific secrets have been abstracted to protect proprietary engagement data.*
