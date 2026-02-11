@@ -8,6 +8,7 @@ Designed and validated for portability across AWS (EKS), GCP (GKE), and Azure (A
 This PoC demonstrates how legacy API gateway architectures can be modernized into a high‑availability, GitOps‑aligned, multi‑cloud platform using declarative configuration, automated provisioning, and enterprise‑grade reliability patterns.
 Developed as a repeatable blueprint for legacy‑to‑cloud migration, enabling enterprises to move API traffic from on‑prem data centers to cloud‑native platforms with minimal risk.
 
+
 🏗️ Architecture & Technology Stack
 
 Infrastructure & Orchestration
@@ -17,14 +18,17 @@ Helm charts for standardized, repeatable deployments
 S3 Remote Backend with DynamoDB state locking for production‑grade IaC
 IRSA + KMS encryption ensuring zero static credentials and hardened security posture
 
+
 API Management Layer
 
 Kong Gateway (DB‑less mode) for ultra‑low latency and declarative configuration
 Cloud‑agnostic gateway architecture validated across AWS, GCP, and Azure
 Apigee‑to‑cloud migration patterns for enterprises transitioning from legacy platforms
 
+
 Cross‑Cloud Consistency
 Validated the “Write Once, Deploy Anywhere” pattern by maintaining a 100% identical Terraform + Helm interface across all three cloud providers.
+
 
 🚀 Operational Features
 
@@ -43,6 +47,7 @@ Deployment & Delivery
 Designed for GitOps‑aligned workflows (ArgoCD/Flux compatible)
 Immutable deployments with declarative configuration
 
+
 📂 Project Structure
 Code
 /terraform      → Modular IaC for AWS/Multi‑Cloud networking and compute  
@@ -50,11 +55,13 @@ Code
 /load-test      → k6 load testing scripts for performance validation  
 /docs           → Architecture diagrams, migration patterns, and governance models  
 
+
 🔐 Security Architecture
 mTLS between gateway and backend services
 JWT validation and OAuth2/OIDC integration
 KMS‑encrypted secrets and IRSA‑based identity
 Rate limiting, WAF‑aligned policies, and zero‑trust enforcement
+
 
 🔄 Modernization Patterns Demonstrated
 Legacy → Cloud‑Native Gateway migration
@@ -62,6 +69,7 @@ Monolith → Microservices routing
 Centralized → Federated API governance
 On‑prem → Hybrid → Multi‑Cloud evolution
 Edge/OPDK → Apigee X / Kong / Kubernetes‑native transition
+
 
 🛠 Technical Competency Mapping (ATS‑Optimized)
 Cloud Providers
@@ -79,6 +87,7 @@ Prometheus, Grafana, k6 load testing, HA/DR patterns, Golden Signals
 Security
 OAuth2/OIDC, JWT, mTLS, KMS, IRSA, zero‑trust API enforcement
 
+
 📬 Contact / Hiring
 Open to Principal Architect, Cloud‑Native Platform Lead, and API Modernization roles.
 
@@ -86,8 +95,5 @@ Open to Principal Architect, Cloud‑Native Platform Lead, and API Modernization
 - **LinkedIn:** www.linkedin.com/in/druhin-dhavala
 - **GitHub:** https://github.com/ddruhin/cloud-native-api-platform
 
-Note: This is a sanitized architectural reference. All business logic and client‑specific details have been abstracted to protect proprietary data.
-
-
 ---
-*Note: This is a sanitized architectural reference. All business logic and client-specific secrets have been abstracted to protect proprietary engagement data.*
+*Note: This is a sanitized architectural reference. All business logic and client‑specific details have been abstracted to protect proprietary data.*
