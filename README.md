@@ -2,12 +2,14 @@ Enterprise Cloud‑Native API Platform (PoC)
 Architectural Lead & Platform Strategy
 
 🎯 Executive Summary
+
 A production‑grade, Kubernetes‑native, cloud‑portable API Management reference architecture.
 Designed and validated for portability across AWS (EKS), GCP (GKE), and Azure (AKS) using cloud‑agnostic Terraform and Helm patterns to eliminate vendor lock‑in.
 This PoC demonstrates how legacy API gateway architectures can be modernized into a high‑availability, GitOps‑aligned, multi‑cloud platform using declarative configuration, automated provisioning, and enterprise‑grade reliability patterns.
 Developed as a repeatable blueprint for legacy‑to‑cloud migration, enabling enterprises to move API traffic from on‑prem data centers to cloud‑native platforms with minimal risk.
 
 🏗️ Architecture & Technology Stack
+
 Infrastructure & Orchestration
 Terraform modules for modular multi‑cloud networking and compute
 Kubernetes‑native EKS cluster with multi‑AZ resilience
@@ -16,6 +18,7 @@ S3 Remote Backend with DynamoDB state locking for production‑grade IaC
 IRSA + KMS encryption ensuring zero static credentials and hardened security posture
 
 API Management Layer
+
 Kong Gateway (DB‑less mode) for ultra‑low latency and declarative configuration
 Cloud‑agnostic gateway architecture validated across AWS, GCP, and Azure
 Apigee‑to‑cloud migration patterns for enterprises transitioning from legacy platforms
