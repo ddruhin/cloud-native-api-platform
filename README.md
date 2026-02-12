@@ -1,6 +1,3 @@
-<img width="86" height="17" alt="image" src="https://github.com/user-attachments/assets/2818612a-3cbc-4809-9bd6-5a79942bb784" />
-
-
 Enterprise Cloud‑Native API Platform (2026 PoC)
 Architectural Lead & Platform Strategy
 
