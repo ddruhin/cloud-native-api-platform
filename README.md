@@ -207,6 +207,15 @@ Open to Principal Architect, Cloud‑Native Platform Lead, and API Modernization
 Cloudwatch Observability
 <img width="727" height="335" alt="image" src="https://github.com/user-attachments/assets/af77b23a-c9ea-4f67-b21c-d79578dda183" />
 
+K6 - Load test
+<img width="835" height="863" alt="image" src="https://github.com/user-attachments/assets/2e9f0a6c-1c9c-4b2e-ba51-f56070cca9ad" />
+
+API Call - Curl
+<img width="841" height="759" alt="image" src="https://github.com/user-attachments/assets/e4887622-1ca3-46ef-b73c-ec4aba6eb9c7" />
+
+
+
+
 
 Note: This is a sanitized architectural reference. All business logic and client‑specific details have been abstracted to protect proprietary data.
 
