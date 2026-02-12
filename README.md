@@ -1,92 +1,201 @@
-Enterprise Cloud‑Native API Platform (PoC)
+Enterprise Cloud‑Native API Platform (2026 PoC)
 Architectural Lead & Platform Strategy
 
 🎯 Executive Summary
+A production‑grade, cloud‑managed, serverless, and Terraform‑driven API platform built on AWS API Gateway + Lambda, designed as a repeatable blueprint for cloud‑native modernization.
 
-A production‑grade, Kubernetes‑native, cloud‑portable API Management reference architecture.
-Designed and validated for portability across AWS (EKS), GCP (GKE), and Azure (AKS) using cloud‑agnostic Terraform and Helm patterns to eliminate vendor lock‑in.
-This PoC demonstrates how legacy API gateway architectures can be modernized into a high‑availability, GitOps‑aligned, multi‑cloud platform using declarative configuration, automated provisioning, and enterprise‑grade reliability patterns.
-Developed as a repeatable blueprint for legacy‑to‑cloud migration, enabling enterprises to move API traffic from on‑prem data centers to cloud‑native platforms with minimal risk.
+This PoC demonstrates:
 
+how to build a real API platform using AWS‑native services
 
-🏗️ Architecture & Technology Stack
+how to validate performance, scalability, observability, and cost governance
 
-Infrastructure & Orchestration
-Terraform modules for modular multi‑cloud networking and compute
-Kubernetes‑native EKS cluster with multi‑AZ resilience
-Helm charts for standardized, repeatable deployments
-S3 Remote Backend with DynamoDB state locking for production‑grade IaC
-IRSA + KMS encryption ensuring zero static credentials and hardened security posture
+how to run a production‑style workload with Golden Signals, alarms, and load testing
 
+how to structure IaC for multi‑cloud portability (Azure APIM, GCP Apigee X next)
 
-API Management Layer
+This is the cloud‑managed half of a multi‑cloud API strategy, with Kubernetes‑native gateways (Kong/Tyk) positioned as optional hybrid extensions.
 
-Kong Gateway (DB‑less mode) for ultra‑low latency and declarative configuration
-Cloud‑agnostic gateway architecture validated across AWS, GCP, and Azure
-Apigee‑to‑cloud migration patterns for enterprises transitioning from legacy platforms
+🏗️ Architecture Overview
+Core Platform (AWS‑Managed)
+API Gateway v2 (HTTP API)
 
+AWS Lambda (Python) backend
 
-Cross‑Cloud Consistency
-Validated the “Write Once, Deploy Anywhere” pattern by maintaining a 100% identical Terraform + Helm interface across all three cloud providers.
+Terraform IaC (clean state, 0 drift)
 
+CloudWatch Observability (Golden Signals dashboard)
 
-🚀 Operational Features
+CloudWatch Alarms (error‑rate SLO)
 
-Cost Governance
-Integrated AWS Spot Instance orchestration, reducing compute overhead by ~70%
-Modular design supports Azure Spot VMs and GCP Preemptible Nodes
+Serverless auto‑scaling
 
-Observability
-Prometheus + Grafana stack for real‑time Golden Signal monitoring
-Cloud‑native logging integrations (CloudWatch, Azure Monitor, GCP Cloud Logging)
+$0.01/day cost profile
+
+Business API
+/api/orders → JSON response
+
+Designed for extension into /api/customers, /api/payments, etc.
 
 Performance Engineering
-k6 load testing for automated throughput, latency, and resilience benchmarking
+k6 load test: 50 VUs, 1450 iterations, ~2.9k req/min
 
-Deployment & Delivery
-Designed for GitOps‑aligned workflows (ArgoCD/Flux compatible)
-Immutable deployments with declarative configuration
+p95 latency: 120ms under load
 
+99% success rate
 
-📂 Project Structure
+Security (Experimented & Cleaned)
+Cognito OAuth2/OIDC
+
+JWT Authorizer
+
+Cleanly removed to keep POC minimal and cost‑efficient
+
+🚀 Key Outcomes
+1. Live Production‑Style API
 Code
-/terraform      → Modular IaC for AWS/Multi‑Cloud networking and compute  
-/helm           → Production‑tuned Helm charts for Kong Gateway and microservices  
-/load-test      → k6 load testing scripts for performance validation  
-/docs           → Architecture diagrams, migration patterns, and governance models  
+GET https://<api-id>.execute-api.us-east-1.amazonaws.com/api/orders
+Returns JSON payload with business logic.
 
+2. Load‑Tested Capacity
+50 VUs
 
-🔐 Security Architecture
-mTLS between gateway and backend services
-JWT validation and OAuth2/OIDC integration
-KMS‑encrypted secrets and IRSA‑based identity
-Rate limiting, WAF‑aligned policies, and zero‑trust enforcement
+1450 iterations
 
+2.9k req/min
+
+p95 < 200ms
+
+Zero errors
+
+3. Observability (Golden Signals)
+Latency (p50/p95/p99)
+
+Request count
+
+Error rate
+
+Lambda duration
+
+Alarm: >5% error rate
+
+4. Governance & IaC
+Terraform modules
+
+Remote state
+
+Zero drift
+
+Full destroy → zero orphans
+
+5. Economics
+$0.01/day
+
+Free tier: 1M API Gateway + 1M Lambda
+
+Serverless auto‑scaling
+
+📂 Repository Structure
+Code
+terraform-poc/
+├── k6.js                     # Load test script
+├── Load-test-results.txt     # 1450 iteration proof
+├── README.md                 # This document
+└── terraform/
+    └── aws/
+        ├── main.tf           # API Gateway + Lambda IaC
+        ├── outputs.tf        # Live URLs
+        └── observability.tf  # CloudWatch dashboards + alarms
+🔍 Validation Artifacts
+Load Testing
+Script: k6.js
+
+Results: Load-test-results.txt
+
+Screenshots included
+
+Observability
+CloudWatch Golden Signals dashboard
+
+Error‑rate alarm
+
+Lambda logs + metrics
+
+Governance
+Terraform plan = 0 changes
+
+Clean destroy
+
+No console drift
 
 🔄 Modernization Patterns Demonstrated
-Legacy → Cloud‑Native Gateway migration
-Monolith → Microservices routing
-Centralized → Federated API governance
-On‑prem → Hybrid → Multi‑Cloud evolution
-Edge/OPDK → Apigee X / Kong / Kubernetes‑native transition
+Legacy → Serverless API Gateway
 
+Monolith → Function‑based backend
+
+Centralized → Terraform‑driven governance
+
+On‑prem → Cloud‑native
+
+High‑cost → $0.01/day serverless economics
+
+🌐 Multi‑Cloud Roadmap (Next Steps)
+This AWS POC is the anchor for a 3‑cloud architecture.
+
+Azure (Next)
+Azure API Management
+
+Azure Functions backend
+
+Azure Monitor observability
+
+Terraform IaC
+
+GCP (Next)
+Apigee X
+
+Cloud Run backend
+
+Cloud Logging/Monitoring
+
+Terraform IaC
+
+Hybrid (Optional)
+Kong Gateway on EKS/AKS/GKE
+
+Internal API mesh
+
+mTLS + JWT + rate limiting
 
 🛠 Technical Competency Mapping (ATS‑Optimized)
 Cloud Providers
-AWS (EKS), GCP (GKE), Azure (AKS)
+AWS (API Gateway, Lambda, CloudWatch)
+Azure (APIM) — planned
+GCP (Apigee X) — planned
 
 IaC & Automation
-Terraform modules, Helm charts, GitHub Actions, GitOps‑aligned workflows
+Terraform modules
+Remote state
+Zero drift
+GitHub Actions (optional extension)
 
 API Strategy
-Kong Gateway, Apigee‑to‑cloud migration patterns, cloud‑agnostic gateway architectures
+Serverless APIs
+Cloud‑managed gateways
+Modernization patterns
+Multi‑cloud portability
 
 Reliability & Observability
-Prometheus, Grafana, k6 load testing, HA/DR patterns, Golden Signals
+CloudWatch dashboards
+Golden Signals
+k6 load testing
+Error‑rate alarms
 
 Security
-OAuth2/OIDC, JWT, mTLS, KMS, IRSA, zero‑trust API enforcement
-
+OAuth2/OIDC (Cognito)
+JWT authorizers
+IAM roles
+KMS encryption
 
 📬 Contact / Hiring
 Open to Principal Architect, Cloud‑Native Platform Lead, and API Modernization roles.
@@ -94,6 +203,12 @@ Open to Principal Architect, Cloud‑Native Platform Lead, and API Modernization
 - **Email:** druhindhavala@gmail.com
 - **LinkedIn:** www.linkedin.com/in/druhin-dhavala
 - **GitHub:** https://github.com/ddruhin/cloud-native-api-platform
+
+Cloudwatch Observability
+<img width="727" height="335" alt="image" src="https://github.com/user-attachments/assets/af77b23a-c9ea-4f67-b21c-d79578dda183" />
+
+
+Note: This is a sanitized architectural reference. All business logic and client‑specific details have been abstracted to protect proprietary data.
 
 ---
 *Note: This is a sanitized architectural reference. All business logic and client‑specific details have been abstracted to protect proprietary data.*
