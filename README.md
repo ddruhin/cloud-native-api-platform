@@ -1,250 +1,159 @@
 **AWS API Gateway – Enterprise Reference Architecture**
 
-This repository implements Phase 1 of a multi phase, enterprise grade serverless API platform. The long term architecture is designed for:
-•	Dual region HA/DR
-•	Auto scaling and performance validation
-•	Chaos testing and failure injection
-•	Multi cloud replication (Azure / GCP)
-Phase 1 is fully implemented and live. 
-Phases 2 and 3 are in progress / planned and documented here for architectural clarity.
+This repository implements Phase 1 of a multi-phase, enterprise-grade serverless API platform on AWS.
+
+Long-term architecture designed for:
+
+- Dual-region HA/DR
+- Auto-scaling and performance validation
+- Chaos testing and failure injection
+- Multi-cloud replication (Azure API Management / GCP Apigee X)
 
 
-Phase 1 – Core Platform (LIVE)
-A production aligned AWS native foundation:
-•	HTTP API v2 → Lambda proxy
-•	2.9k req/min, 120ms p95, ~99% success (k6 validated)
-•	CloudWatch Golden Signals dashboard + 5xx alarms
-•	AWS Budgets for cost governance
-•	Terraform IaC with S3 + DynamoDB locking
-•	Fully reproducible, destroyable, zero drift infrastructure
-This phase establishes the baseline platform that future HA/DR and multi cloud capabilities will build on.
+**Phase 1 – Core Platform (LIVE)**
+Production-aligned AWS-native foundation demonstrating real serverless API patterns, observability, cost governance, and performance behavior.
+
+**Delivered in Phase 1**
+- HTTP API v2 → Lambda proxy integration
+- Live /api/orders endpoint (Lambda placeholder backend)
+- Load-tested: ~2.9k requests/min using k6 (50 virtual users)
+- Performance: ~120ms p95 latency, ~99% success rate
+- Terraform IaC with:
+   - Remote state in S3
+   - DynamoDB state locking
+   - Fully reproducible, destroyable, zero-drift infrastructure
 
 
-Phase 2 – HA/DR & Scaling (IN PROGRESS)
-Architectural patterns defined; implementation underway:
-•	Dual region deployment (us east 1 + us west 2)
-•	Cross region routing and failover patterns
-•	Auto scaling validation under load
-•	Chaos testing (latency injection, failure simulation)
-•	Client ready demo environment
+**Observability (LIVE)**
+
+```
+CloudWatch Golden Signals Dashboard:
+├── Latency (p95)
+├── Traffic
+├── Errors
+└── Lambda duration
+```
 
 
-Phase 3 – Multi Cloud Expansion (PLANNED)
-Designs completed; implementation scheduled:
-•	Azure API Management replication
-•	GCP Apigee X replication
-•	Multi cloud traffic federation patterns
+```
+CloudWatch Alarms: 
+└── 5xx error-rate alarm (API Gateway)
+```
 
----
+```
+CloudWatch Alarms: 
+└── 5xx error-rate alarm (API Gateway)
+```
 
-## **📌 Overview**
 
-This POC provisions:
+**Cost Governance (LIVE)**
+```AWS Budgets:
+├── $20/month budget 
+└── 50% threshold alerts
+```
+This establishes the baseline platform for future HA/DR and multi-cloud expansion.
 
-- **Amazon API Gateway (HTTP API)**  
-- **AWS Lambda integration (placeholder for backend logic)**  
-- **CloudWatch dashboards, metrics, and alarms**  
-- **AWS Budgets for cost control**  
-- **Terraform remote state (S3 + DynamoDB locking)**  
-- **k6 load testing script for latency and error‑rate validation**
 
-It is designed to be:
 
-- Small  
-- Understandable  
-- Easy to deploy  
-- Representative of real production patterns  
+**Phase 2 – HA/DR & Scaling (IN PROGRESS)**
+Architectural patterns defined; implementation underway.
 
----
+Planned capabilities:
+- Dual-region deployment (us-east-1 + us-west-2)
+- Cross-region routing and failover patterns
+- Auto-scaling validation (sustained + burst load)
+- Chaos testing:
+   - Latency injection
+   - Failure simulation
+   - Region-level disruption scenarios
+- Client-ready demo environment
 
-## **📁 Repository Structure**
 
+**Phase 3 – Multi-Cloud Expansion (PLANNED)**
+Designs completed; implementation scheduled.
+
+Planned capabilities:
+- Azure API Management replication
+- GCP Apigee X replication
+- Multi-cloud traffic federation patterns
+
+**Repository Structure**
 ```
 terraform/aws/
 ├── providers.tf        # AWS provider + default tags
 ├── backend.tf          # Terraform remote state (S3 + DynamoDB lock)
-├── apigateway.tf       # API Gateway + stage + invoke URL output
-├── observability.tf    # CloudWatch dashboard + alarms
+├── apigateway.tf       # API Gateway HTTP API + stage + invoke URL
+├── observability.tf    # CloudWatch dashboard + metric alarms
 ├── budgets.tf          # AWS Budgets cost guardrails
-└── load-test/k6.js     # k6 load testing script
+└── load-test/
+    └── k6.js           # k6 load testing script
 ```
 
----
-
-## **🏗️ Architecture**
-
-```
+**Architecture (Phase 1)**
 Internet
-   ↓
+  ↓
 [API Gateway HTTP API]
-   ↓ (Lambda Proxy Integration)
-[Lambda Function Placeholder]
-   ↓
-[CloudWatch Logs / Metrics / Alarms]
-```
+  ↓ (Lambda Proxy)
+[Lambda Function] 
+  ↓
+[CloudWatch Logs/Metrics/Alarms]
+  ↓
+[Golden Signals Dashboard + 5xx Alarm]
 
-This architecture demonstrates:
+[Terraform State: S3 + DynamoDB Lock]
+[AWS Budgets: $20/mo + 50% Alerts]
 
-- Serverless edge routing  
-- Automatic scaling  
-- Pay‑per‑request economics  
-- Basic observability and cost governance  
 
----
+**🚀 Deployment**
+Terraform:
 
-## **🚀 Deployment**
-
-### **Terraform Deploy**
-
-```bash
+bash
 cd terraform/aws
 terraform init
-terraform plan -var="environment=dev"
+terraform plan -var="environment=dev" 
 terraform apply -var="environment=dev"
-```
 
-### **Load Test**
 
-```bash
+**Load Test:**
+
+bash
 cd load-test
 k6 run k6.js
+
+
+**Technical Highlights**
+| Component     | File             | Key Features                                 |
+| ------------- | ---------------- | -------------------------------------------- |
+| API Gateway   | apigateway.tf    | HTTP API v2, auto-deploy stage, Lambda proxy |
+| Observability | observability.tf | Golden Signals dashboard, 5xx alarms         |
+| Cost Control  | budgets.tf       | $20/mo budget, 50% alerts                    |
+| State Mgmt    | backend.tf       | S3 remote state + DynamoDB locking           |
+| Load Testing  | k6.js            | 2.9k req/min, 120ms p95 validated            |
+
+
+**Scope & Limitations (Intentional)**
+Phase 1 Focus:
 ```
+✅ AWS-native only
+✅ Single-region baseline
+❌ No Kubernetes/Kong
+❌ No multi-cloud (Phases 2-3)
+```
+This keeps Phase 1: Simple. Reproducible. Production-aligned.
 
----
 
-## **🔍 Technical Implementation**
+**Roadmap Summary**
+- Phase 1 (LIVE): Core AWS platform
+- Phase 2 (IN PROGRESS): Dual-region HA/DR + chaos
+- Phase 3 (PLANNED): Azure + GCP replication
 
-### **API Gateway (apigateway.tf)**
 
-Creates:
+**Ideal Usage**
+- Architecture deep dives
+- Client demonstrations
+- Platform engineering discussions
+- Phase 1 blueprint for enterprise API initiatives
 
-- **HTTP API** (`aws_apigatewayv2_api`)  
-- **Auto‑deploy stage** (`aws_apigatewayv2_stage`)  
-- **Invoke URL output**  
-
-This is the minimal pattern for:
-
-- Edge routing  
-- Lambda proxy integration  
-- Environment‑specific stages  
-- CORS / mapping templates (extendable)  
-
----
-
-### **Terraform State Backend (backend.tf)**
-
-Uses the standard AWS production pattern:
-
-- **S3 bucket** for remote state  
-- **DynamoDB table** for state locking  
-- **Encryption enabled**  
-- **Versioning supported by S3**  
-
-This prevents:
-
-- Concurrent applies  
-- State corruption  
-- Local state drift  
-
----
-
-### **Observability (observability.tf)**
-
-Implements:
-
-#### **CloudWatch Dashboard**
-- API Gateway latency (p95)  
-- API Gateway request count  
-- Lambda duration (p95)  
-- Lambda error count  
-
-#### **CloudWatch Alarm**
-- High API Gateway 5XX error rate  
-- Threshold: >10 errors over 2 minutes  
-
-This provides a **Golden Signals**‑style view of the POC.
-
----
-
-### **Cost Governance (budgets.tf)**
-
-Creates:
-
-- **Monthly cost budget: $20**  
-- **Alert at 50% actual spend**  
-- **Email notification**  
-
-This prevents runaway costs during testing.
-
----
-
-### **Load Testing (load-test/k6.js)**
-
-k6 script validates:
-
-- 95th percentile latency < 200ms  
-- Error rate < 1%  
-- 50 VUs for 30 seconds  
-- Basic functional checks (HTTP 200, response time < 250ms)  
-
-This is a realistic, lightweight performance validation pattern.
-
----
-
-## **🎯 What This Demonstrates**
-
-- **Infrastructure as Code**  
-  Terraform for API Gateway, CloudWatch, Budgets, and state backend
-
-- **Serverless API Foundations**  
-  Minimal HTTP API + Lambda integration pattern
-
-- **Observability First**  
-  Dashboards, metrics, alarms from day zero
-
-- **Cost Awareness**  
-  Budget guardrails to prevent accidental overspend
-
-- **Performance Engineering**  
-  k6 load testing for latency and reliability validation
-
----
-
-## **🛠️ Intentional Limitations**
-
-This is a **focused POC**, not a production platform.
-
-- No Lambda business logic (placeholder only)  
-- No CI/CD pipeline  
-- No custom domain (ACM + CloudFront)  
-- No authentication (IAM/Cognito can be added)  
-- Single region, single account  
-- No VPC Link or private integrations  
-
-These can be added as next steps.
-
----
-
-## **🔮 Future Enhancements**
-
-- [ ] Add Lambda backend logic  
-- [ ] Add Cognito JWT authorizer  
-- [ ] Add custom domain (ACM + CloudFront)  
-- [ ] Add GitHub Actions CI/CD  
-- [ ] Add VPC Link + private ALB  
-- [ ] Add WAF + DDoS protection  
-- [ ] Add structured logging + X‑Ray tracing  
-
----
-
-## **🤝 Ideal Use Cases**
-
-- Learning AWS API Gateway patterns  
-- Validating serverless cost models  
-- Demonstrating Terraform AWS patterns  
-- Running lightweight performance tests  
-
----
 
 ## **📄 License**
 
