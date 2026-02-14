@@ -1,11 +1,39 @@
-**AWS API Gateway Demo — Serverless Cloud‑Native Patterns**
+**AWS API Gateway – Enterprise Reference Architecture**
 
-This repository contains a **minimal, production‑aligned AWS API Gateway proof‑of‑concept** built using Terraform.  
-It demonstrates foundational **serverless API patterns**, **observability**, **cost governance**, and **performance validation** using **k6**.
+This repository implements Phase 1 of a multi phase, enterprise grade serverless API platform. The long term architecture is designed for:
+•	Dual region HA/DR
+•	Auto scaling and performance validation
+•	Chaos testing and failure injection
+•	Multi cloud replication (Azure / GCP)
+Phase 1 is fully implemented and live. 
+Phases 2 and 3 are in progress / planned and documented here for architectural clarity.
 
-This project is intentionally scoped as a **focused AWS‑native demo**.  
-There is **no Kubernetes**, **no Kong**, and **no multi‑cloud implementation**.  
-The goal is clarity, reproducibility, and demonstrating real AWS patterns end‑to‑end.
+
+Phase 1 – Core Platform (LIVE)
+A production aligned AWS native foundation:
+•	HTTP API v2 → Lambda proxy
+•	2.9k req/min, 120ms p95, ~99% success (k6 validated)
+•	CloudWatch Golden Signals dashboard + 5xx alarms
+•	AWS Budgets for cost governance
+•	Terraform IaC with S3 + DynamoDB locking
+•	Fully reproducible, destroyable, zero drift infrastructure
+This phase establishes the baseline platform that future HA/DR and multi cloud capabilities will build on.
+
+
+Phase 2 – HA/DR & Scaling (IN PROGRESS)
+Architectural patterns defined; implementation underway:
+•	Dual region deployment (us east 1 + us west 2)
+•	Cross region routing and failover patterns
+•	Auto scaling validation under load
+•	Chaos testing (latency injection, failure simulation)
+•	Client ready demo environment
+
+
+Phase 3 – Multi Cloud Expansion (PLANNED)
+Designs completed; implementation scheduled:
+•	Azure API Management replication
+•	GCP Apigee X replication
+•	Multi cloud traffic federation patterns
 
 ---
 
