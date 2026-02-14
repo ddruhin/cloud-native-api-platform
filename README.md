@@ -1,157 +1,229 @@
-Enterprise Cloud‑Native API Platform (2026 PoC)
-Architectural Lead & Platform Strategy
+**AWS API Gateway Demo — Serverless Cloud‑Native Patterns**
 
-🎯 Executive Summary
-A production‑grade, cloud‑managed, serverless, and Terraform‑driven API platform built on AWS API Gateway + Lambda, designed as a repeatable blueprint for cloud‑native modernization.
+This repository contains a **minimal, production‑aligned AWS API Gateway proof‑of‑concept** built using Terraform.  
+It demonstrates foundational **serverless API patterns**, **observability**, **cost governance**, and **performance validation** using **k6**.
 
-This PoC demonstrates:
+This project is intentionally scoped as a **focused AWS‑native demo**.  
+There is **no Kubernetes**, **no Kong**, and **no multi‑cloud implementation**.  
+The goal is clarity, reproducibility, and demonstrating real AWS patterns end‑to‑end.
 
-how to build a real API platform using AWS‑native services
-how to validate performance, scalability, observability, and cost governance
-how to run a production‑style workload with Golden Signals, alarms, and load testing
-how to structure IaC for multi‑cloud portability (Azure APIM, GCP Apigee X next)
-This is the cloud‑managed half of a multi‑cloud API strategy, with Kubernetes‑native gateways (Kong/Tyk) positioned as optional hybrid extensions.
+---
 
-🏗️ Architecture Overview
-Core Platform (AWS‑Managed)
-API Gateway v2 (HTTP API)
-AWS Lambda (Python) backend
-Terraform IaC (clean state, 0 drift)
-CloudWatch Observability (Golden Signals dashboard)
-CloudWatch Alarms (error‑rate SLO)
-Serverless auto‑scaling
-$0.01/day cost profile
+## **📌 Overview**
 
-Business API
-/api/orders → JSON response
-Designed for extension into /api/customers, /api/payments, etc.
+This POC provisions:
 
-Performance Engineering
-k6 load test: 50 VUs, 1450 iterations, ~2.9k req/min
-p95 latency: 120ms under load
-99% success rate
+- **Amazon API Gateway (HTTP API)**  
+- **AWS Lambda integration (placeholder for backend logic)**  
+- **CloudWatch dashboards, metrics, and alarms**  
+- **AWS Budgets for cost control**  
+- **Terraform remote state (S3 + DynamoDB locking)**  
+- **k6 load testing script for latency and error‑rate validation**
 
-Security (Experimented & Cleaned)
-Cognito OAuth2/OIDC
-JWT Authorizer
-Cleanly removed to keep POC minimal and cost‑efficient
+It is designed to be:
 
+- Small  
+- Understandable  
+- Easy to deploy  
+- Representative of real production patterns  
 
-🚀 Key Outcomes
-1. Live Production‑Style API
-Code
-GET https://<api-id>.execute-api.us-east-1.amazonaws.com/api/orders
-Returns JSON payload with business logic.
+---
 
-2. Load‑Tested Capacity
-50 VUs
-1450 iterations
-2.9k req/min
-p95 < 200ms
-Zero errors
+## **📁 Repository Structure**
 
-3. Observability (Golden Signals)
-Latency (p50/p95/p99)
-Request count
-Error rate
-Lambda duration
-Alarm: >5% error rate
+```
+terraform/aws/
+├── providers.tf        # AWS provider + default tags
+├── backend.tf          # Terraform remote state (S3 + DynamoDB lock)
+├── apigateway.tf       # API Gateway + stage + invoke URL output
+├── observability.tf    # CloudWatch dashboard + alarms
+├── budgets.tf          # AWS Budgets cost guardrails
+└── load-test/k6.js     # k6 load testing script
+```
 
-4. Governance & IaC
-Terraform modules
-Remote state
-Zero drift
-Full destroy → zero orphans
+---
 
-5. Economics
-$0.01/day
-Free tier: 1M API Gateway + 1M Lambda
-Serverless auto‑scaling
+## **🏗️ Architecture**
 
-📂 Repository Structure
-Code
-terraform-poc/
-├── k6.js                     # Load test script
-├── Load-test-results.txt     # 1450 iteration proof
-├── README.md                 # This document
-└── terraform/
-    └── aws/
-        ├── main.tf           # API Gateway + Lambda IaC
-        ├── outputs.tf        # Live URLs
-        └── observability.tf  # CloudWatch dashboards + alarms
+```
+Internet
+   ↓
+[API Gateway HTTP API]
+   ↓ (Lambda Proxy Integration)
+[Lambda Function Placeholder]
+   ↓
+[CloudWatch Logs / Metrics / Alarms]
+```
 
-🔍 Validation Artifacts
-Load Testing
-Script: k6.js
+This architecture demonstrates:
 
-Results: Load-test-results.txt
+- Serverless edge routing  
+- Automatic scaling  
+- Pay‑per‑request economics  
+- Basic observability and cost governance  
 
-Screenshots included
+---
 
-Observability
-CloudWatch Golden Signals dashboard
-Error‑rate alarm
-Lambda logs + metrics
-Governance
-Terraform plan = 0 changes
-Clean destroy
-No console drift
+## **🚀 Deployment**
 
-🔄 Modernization Patterns Demonstrated
-Legacy → Serverless API Gateway
-Monolith → Function‑based backend
-Centralized → Terraform‑driven governance
-On‑prem → Cloud‑native
-High‑cost → $0.01/day serverless economics
+### **Terraform Deploy**
 
-🌐 Multi‑Cloud Roadmap (Next Steps)
-This AWS POC is the anchor for a 3‑cloud architecture.
+```bash
+cd terraform/aws
+terraform init
+terraform plan -var="environment=dev"
+terraform apply -var="environment=dev"
+```
 
-Azure (Next)
-Azure API Management
-Azure Functions backend
-Azure Monitor observability
-Terraform IaC
-GCP (Next)
-Apigee X
+### **Load Test**
 
-Cloud Run backend
-Cloud Logging/Monitoring
-Terraform IaC
-Hybrid (Optional)
-Kong Gateway on EKS/AKS/GKE
-Internal API mesh
-mTLS + JWT + rate limiting
+```bash
+cd load-test
+k6 run k6.js
+```
 
-🛠 Technical Competency Mapping 
-Cloud Providers
-AWS (API Gateway, Lambda, CloudWatch)
-Azure (APIM) — planned
-GCP (Apigee X) — planned
+---
 
-IaC & Automation
-Terraform modules
-Remote state
-Zero drift
-GitHub Actions (optional extension)
+## **🔍 Technical Implementation**
 
-API Strategy
-Serverless APIs
-Cloud‑managed gateways
-Modernization patterns
-Multi‑cloud portability
+### **API Gateway (apigateway.tf)**
 
-Reliability & Observability
-CloudWatch dashboards
-Golden Signals
-k6 load testing
-Error‑rate alarms
+Creates:
 
-Security
-OAuth2/OIDC (Cognito)
-JWT authorizers
-IAM roles
-KMS encryption
+- **HTTP API** (`aws_apigatewayv2_api`)  
+- **Auto‑deploy stage** (`aws_apigatewayv2_stage`)  
+- **Invoke URL output**  
+
+This is the minimal pattern for:
+
+- Edge routing  
+- Lambda proxy integration  
+- Environment‑specific stages  
+- CORS / mapping templates (extendable)  
+
+---
+
+### **Terraform State Backend (backend.tf)**
+
+Uses the standard AWS production pattern:
+
+- **S3 bucket** for remote state  
+- **DynamoDB table** for state locking  
+- **Encryption enabled**  
+- **Versioning supported by S3**  
+
+This prevents:
+
+- Concurrent applies  
+- State corruption  
+- Local state drift  
+
+---
+
+### **Observability (observability.tf)**
+
+Implements:
+
+#### **CloudWatch Dashboard**
+- API Gateway latency (p95)  
+- API Gateway request count  
+- Lambda duration (p95)  
+- Lambda error count  
+
+#### **CloudWatch Alarm**
+- High API Gateway 5XX error rate  
+- Threshold: >10 errors over 2 minutes  
+
+This provides a **Golden Signals**‑style view of the POC.
+
+---
+
+### **Cost Governance (budgets.tf)**
+
+Creates:
+
+- **Monthly cost budget: $20**  
+- **Alert at 50% actual spend**  
+- **Email notification**  
+
+This prevents runaway costs during testing.
+
+---
+
+### **Load Testing (load-test/k6.js)**
+
+k6 script validates:
+
+- 95th percentile latency < 200ms  
+- Error rate < 1%  
+- 50 VUs for 30 seconds  
+- Basic functional checks (HTTP 200, response time < 250ms)  
+
+This is a realistic, lightweight performance validation pattern.
+
+---
+
+## **🎯 What This Demonstrates**
+
+- **Infrastructure as Code**  
+  Terraform for API Gateway, CloudWatch, Budgets, and state backend
+
+- **Serverless API Foundations**  
+  Minimal HTTP API + Lambda integration pattern
+
+- **Observability First**  
+  Dashboards, metrics, alarms from day zero
+
+- **Cost Awareness**  
+  Budget guardrails to prevent accidental overspend
+
+- **Performance Engineering**  
+  k6 load testing for latency and reliability validation
+
+---
+
+## **🛠️ Intentional Limitations**
+
+This is a **focused POC**, not a production platform.
+
+- No Lambda business logic (placeholder only)  
+- No CI/CD pipeline  
+- No custom domain (ACM + CloudFront)  
+- No authentication (IAM/Cognito can be added)  
+- Single region, single account  
+- No VPC Link or private integrations  
+
+These can be added as next steps.
+
+---
+
+## **🔮 Future Enhancements**
+
+- [ ] Add Lambda backend logic  
+- [ ] Add Cognito JWT authorizer  
+- [ ] Add custom domain (ACM + CloudFront)  
+- [ ] Add GitHub Actions CI/CD  
+- [ ] Add VPC Link + private ALB  
+- [ ] Add WAF + DDoS protection  
+- [ ] Add structured logging + X‑Ray tracing  
+
+---
+
+## **🤝 Ideal Use Cases**
+
+- Learning AWS API Gateway patterns  
+- Validating serverless cost models  
+- Demonstrating Terraform AWS patterns  
+- Running lightweight performance tests  
+
+---
+
+## **📄 License**
+
+MIT License  
+Every Terraform file maps directly to real AWS infrastructure.
+
+---
 
 📬 Contact / Hiring
 Open to Principal Architect, Cloud‑Native Platform Lead, and API Modernization roles.
